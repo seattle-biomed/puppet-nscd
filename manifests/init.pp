@@ -1,6 +1,8 @@
 # == Class: nscd
 #
-# Full description of class nscd here.
+# Configure nscd on a Linux system.
+#
+# Supports Ubuntu; tested on 12.04.
 #
 # === Parameters
 #
@@ -23,19 +25,34 @@
 #
 # === Examples
 #
-#  class { nscd:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
-#  }
+#  include nscd
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Andrew Leonard
 #
 # === Copyright
 #
-# Copyright 2011 Your name here, unless otherwise noted.
+# Copyright 2012 Andrew Leonard, Seattle Biomedical Research Institute
 #
 class nscd {
 
+  case $::operatingsystem {
+    ubuntu: {
+      case $::operatingsystemrelease {
+        12.04: {
+          $pkg = 'unscd'
+        }
+        default: {
+          $pkg = 'nscd'
+        }
+      }
+    }
+    default: {
+      fail("Module ${module_name} is not supported n ${::operatingsystem}")
+    }
+  }
+
+  package { $pkg: ensure => installed }
 
 }
