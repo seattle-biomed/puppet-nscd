@@ -42,9 +42,11 @@ class nscd {
       case $::operatingsystemrelease {
         12.04: {
           $pkg = 'unscd'
+          $svc = 'unscd'
         }
         default: {
           $pkg = 'nscd'
+          $svc = 'nscd'
         }
       }
     }
@@ -54,5 +56,11 @@ class nscd {
   }
 
   package { $pkg: ensure => installed }
+
+  service { 'nscd':
+    enable  => true,
+    name    => $svc,
+    require => Package[$pkg],
+  }
 
 }
